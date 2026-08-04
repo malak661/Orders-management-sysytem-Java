@@ -1,13 +1,12 @@
 package com.ordersystem.exception;
 
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when attempting to create or update a customer with an email
+ * that already exists in the system.
  */
 public class DuplicateEmailException extends RuntimeException {
 
-    public DuplicateEmailException(String message) {
-        super(message);
+    public DuplicateEmailException(String email) {
+        super("A customer with email '" + email + "' already exists.");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

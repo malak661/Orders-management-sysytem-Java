@@ -1,13 +1,11 @@
 package com.ordersystem.exception;
 
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when an order with the given id cannot be found.
  */
 public class OrderNotFoundException extends RuntimeException {
 
-    public OrderNotFoundException(String message) {
-        super(message);
+    public OrderNotFoundException(String orderId) {
+        super("Order not found with id: " + orderId);
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

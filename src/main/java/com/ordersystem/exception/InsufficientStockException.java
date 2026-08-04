@@ -1,13 +1,13 @@
 package com.ordersystem.exception;
 
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when an order requests a quantity greater than the available stock
+ * for a given product.
  */
 public class InsufficientStockException extends RuntimeException {
 
-    public InsufficientStockException(String message) {
-        super(message);
+    public InsufficientStockException(String productId, int requested, int available) {
+        super("Insufficient stock for product '" + productId + "': requested "
+                + requested + ", available " + available + ".");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

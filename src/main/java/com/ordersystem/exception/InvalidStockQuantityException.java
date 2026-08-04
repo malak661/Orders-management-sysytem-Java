@@ -1,13 +1,11 @@
 package com.ordersystem.exception;
 
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when attempting to create or update a product with a negative stock quantity.
  */
 public class InvalidStockQuantityException extends RuntimeException {
 
-    public InvalidStockQuantityException(String message) {
-        super(message);
+    public InvalidStockQuantityException(int quantity) {
+        super("Invalid stock quantity: " + quantity + ". Quantity cannot be negative.");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

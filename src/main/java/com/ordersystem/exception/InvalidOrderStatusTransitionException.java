@@ -1,13 +1,15 @@
 package com.ordersystem.exception;
 
+import com.ordersystem.model.OrderStatus;
+
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when attempting to transition an order to a status that is not
+ * valid from its current status (e.g. shipping an unpaid order,
+ * updating a cancelled order).
  */
 public class InvalidOrderStatusTransitionException extends RuntimeException {
 
-    public InvalidOrderStatusTransitionException(String message) {
-        super(message);
+    public InvalidOrderStatusTransitionException(OrderStatus from, OrderStatus to) {
+        super("Invalid order status transition: cannot move from " + from + " to " + to + ".");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

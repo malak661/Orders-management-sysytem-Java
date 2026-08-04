@@ -1,13 +1,13 @@
 package com.ordersystem.exception;
 
+import java.math.BigDecimal;
+
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when attempting to create or update a product with a negative price.
  */
 public class InvalidPriceException extends RuntimeException {
 
-    public InvalidPriceException(String message) {
-        super(message);
+    public InvalidPriceException(BigDecimal price) {
+        super("Invalid price: " + price + ". Price cannot be negative.");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }

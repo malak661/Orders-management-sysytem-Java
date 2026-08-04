@@ -1,13 +1,11 @@
 package com.ordersystem.exception;
 
 /**
- * TODO: Thrown when ... (describe the business rule this exception protects)
+ * Thrown when attempting to create an order with no items.
  */
 public class EmptyOrderException extends RuntimeException {
 
-    public EmptyOrderException(String message) {
-        super(message);
+    public EmptyOrderException() {
+        super("An order must contain at least one item.");
     }
-
-    // TODO: add additional constructors if useful (e.g. with cause, or with structured fields)
 }
