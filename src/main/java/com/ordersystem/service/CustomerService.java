@@ -28,8 +28,15 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(Customer customer) {
-        // TODO
-        return null;
+        if(customer == null || customer.getId() == null)
+        {
+            throw new IllegalArgumentException("Customer id must be provided for update");
+        }
+        if(customerRepository.findById(customer.getId()).isEmpty())
+        {
+            throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
+        }
+        return customerRepository.update(customer);
     }
 
     public List<Customer> searchCustomers(String keyword) {
