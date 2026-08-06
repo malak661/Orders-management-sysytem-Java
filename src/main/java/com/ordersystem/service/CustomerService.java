@@ -38,8 +38,7 @@ public class CustomerService {
     }
 
     public List<Customer> listCustomers() {
-        // TODO
-        return null;
+        return customerRepository.findAll();
     }
 
     public void deleteCustomer(String id) {
