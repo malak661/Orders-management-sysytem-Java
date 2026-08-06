@@ -41,7 +41,12 @@ public class CustomerService {
         return customerRepository.findAll();
     }
 
-    public void deleteCustomer(String id) {
-        // TODO
+    public void deleteCustomer(long id) {
+        Customer customer = customerRepository.findById(id);
+        if(customer == null)
+        {
+            throw new IllegalArgumentException("Customer with id " + id + " not found");
+        }
+        customerRepository.delete(customer);
     }
 }
