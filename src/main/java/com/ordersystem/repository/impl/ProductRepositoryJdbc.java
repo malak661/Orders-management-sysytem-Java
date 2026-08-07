@@ -135,4 +135,10 @@ public class ProductRepositoryJdbc implements ProductRepository {
             throw new IllegalArgumentException("Product id must not be null or empty");
         }
     }
+    private void bindProductValues(PreparedStatement statement, Product product, int startIndex) throws SQLException {
+        statement.setString(startIndex, product.getName());
+        statement.setString(startIndex + 1,
+                product.getPrice() == null ? null : product.getPrice().toPlainString());
+        statement.setInt(startIndex + 2, product.getStockQuantity());
+    }
 }
