@@ -16,7 +16,7 @@ public interface ProductRepository {
     Optional<Product> findById(String id);
 
     List<Product> findAll();
-    Produ
+    
 
     List<Product> findLowStock(int threshold);
 

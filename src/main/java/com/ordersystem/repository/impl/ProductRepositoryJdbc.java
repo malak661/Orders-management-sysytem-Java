@@ -127,7 +127,7 @@ public class ProductRepositoryJdbc implements ProductRepository {
             statement.setString(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete product with id: " + id, e);
+            throw new RuntimeException("Failed to delete product with id: " + id, e);}
         }
         private void requireValidProduct(Product product) {
         if (product == null) {

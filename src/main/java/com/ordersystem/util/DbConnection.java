@@ -20,6 +20,20 @@ public class DbConnection {
     }
 
     public static void initializeSchema() {
-        // TODO: read resources/schema.sql and execute it if tables don't exist
+          String schemaSql = readSchema();
+
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            for (String sqlCommand : schemaSql.split(";")) {
+                String sql = sqlCommand.trim();
+                if (!sql.isEmpty()) {
+                    statement.execute(sql);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to initialize database schema", e);
+        }
     }
+    }
+    
 }
