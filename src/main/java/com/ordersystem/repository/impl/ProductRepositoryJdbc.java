@@ -117,6 +117,14 @@ public class ProductRepositoryJdbc implements ProductRepository {
 
     @Override
     public void delete(String id) {
-        // TODO
-    }
+         if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Product id must not be null or empty");
+        }
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+            statement.setString(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete product with id: " + id, e);
+        }
 }
