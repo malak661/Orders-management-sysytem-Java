@@ -128,8 +128,29 @@ public Optional<Customer> findById(long id) {
 
     @Override
     public List<Customer> findAll() {
-        // TODO
-        return null;
+        String sql = "SELECT * FROM customers";
+    List<Customer> customers = new ArrayList<>();
+
+    try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            Customer customer = new Customer();
+            customer.setId(rs.getLong("id"));
+            customer.setName(rs.getString("name"));
+            customer.setEmail(rs.getString("email"));
+            customer.setPhone(rs.getString("phone"));
+            customer.setAddress(rs.getString("address"));
+
+            customers.add(customer);
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to find customers", e);
+    }
+
+    return customers;
     }
 
     @Override
