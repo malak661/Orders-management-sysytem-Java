@@ -21,7 +21,7 @@ public class CustomerRepositoryJdbc implements CustomerRepository {
     }
 
     @Override
-    public Optional<Customer> findById(String id) {
+    public Optional<Customer> findById(long id) {
         // TODO
         return Optional.empty();
     }
@@ -44,7 +44,7 @@ public class CustomerRepositoryJdbc implements CustomerRepository {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(long id) {
         // TODO
     }
 }
