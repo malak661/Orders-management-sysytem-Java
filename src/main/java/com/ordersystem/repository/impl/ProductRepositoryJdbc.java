@@ -6,6 +6,7 @@ import com.ordersystem.util.DbConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -61,8 +62,18 @@ public class ProductRepositoryJdbc implements ProductRepository {
 
     @Override
     public Optional<Product> findById(String id) {
-        // TODO
-        return Optional.empty();
+        if (id == null || id.isEmpty()) {
+            return Optional.empty();
+        }
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+            statement.setString(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(mapRow(resultSet)) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find product with id: " + id, e);
+        }
     }
 
     @Override
