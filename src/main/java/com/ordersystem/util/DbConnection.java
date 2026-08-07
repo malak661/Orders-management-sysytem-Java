@@ -1,5 +1,9 @@
 package com.ordersystem.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,6 +40,20 @@ public class DbConnection {
             throw new RuntimeException("Failed to initialize database schema", e);
         }
     }
+        private static String readSchema() {
+        try (InputStream in = DbConnection.class.getResourceAsStream(SCHEMA_RESOURCE)) {
+            if (in != null) {
+                return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            // fall through to the file-system lookup below
+        }
+        try {
+            return Files.readString(SCHEMA_FILE_FALLBACK);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read schema.sql", e);
+        }
+    }
     }
     
-}
+
