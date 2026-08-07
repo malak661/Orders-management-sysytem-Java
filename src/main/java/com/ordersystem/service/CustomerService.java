@@ -5,15 +5,6 @@ import com.ordersystem.repository.CustomerRepository;
 
 import java.util.List;
 
-/**
- * Business Logic Layer for Customer operations.
- * Responsibilities (AC1, AC2):
- * TODO: - create(Customer) -> reject duplicate email (throw DuplicateEmailException)
- * TODO: - update(Customer)
- * TODO: - search(String keyword) -> by name/email
- * TODO: - list() -> all customers
- * TODO: - delete(String id)
- */
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
@@ -22,11 +13,19 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public Customer createCustomer(Customer customer) {
-        // TODO: validate unique email, then save
-        return null;
+public Customer createCustomer(Customer customer) {
+    if (customer == null) {
+        throw new IllegalArgumentException("No customer to be created");
     }
 
+    String email = customer.getEmail();
+
+    if (customerRepository.findByEmail(email).isPresent()) {
+        throw new IllegalArgumentException("Email is already used");
+    } else {
+        return customerRepository.save(customer);
+    }
+}
     public Customer updateCustomer(Customer customer) {
         if(customer == null || customer.getId() == null)
         {
