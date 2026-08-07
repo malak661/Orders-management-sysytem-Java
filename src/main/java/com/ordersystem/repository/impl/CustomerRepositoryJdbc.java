@@ -77,7 +77,7 @@ public Optional<Customer> findById(long id) {
                 customer.setId(rs.getLong("id"));
                 customer.setName(rs.getString("name"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phone"));
+                customer.setPhone(rs.getInt("phone"));
                 customer.setAddress(rs.getString("address"));
 
                 return Optional.of(customer);
@@ -111,7 +111,7 @@ public Optional<Customer> findById(long id) {
                 customer.setId(rs.getLong("id"));
                 customer.setName(rs.getString("name"));
                 customer.setEmail(rs.getString("email"));
-                customer.setPhone(rs.getString("phone"));
+                customer.setPhone(rs.getInt("phone"));
                 customer.setAddress(rs.getString("address"));
 
                 return Optional.of(customer);
@@ -140,7 +140,7 @@ public Optional<Customer> findById(long id) {
             customer.setId(rs.getLong("id"));
             customer.setName(rs.getString("name"));
             customer.setEmail(rs.getString("email"));
-            customer.setPhone(rs.getString("phone"));
+            customer.setPhone(rs.getInt("phone"));
             customer.setAddress(rs.getString("address"));
 
             customers.add(customer);
@@ -155,7 +155,46 @@ public Optional<Customer> findById(long id) {
 
     @Override
     public void update(Customer customer) {
-        // TODO
+       @Override
+public void update(Customer customer) {
+
+    if (customer == null || customer.getId() <= 0) {
+        throw new IllegalArgumentException("Valid customer with an ID is required to update.");
+    }
+    if (customer.getName() == null) {
+        throw new IllegalArgumentException("Customer Name is required.");
+    }
+    if (customer.getEmail() == null) {
+        throw new IllegalArgumentException("Customer Email is required.");
+    }
+    if (customer.getPhone() < 0) {
+        throw new IllegalArgumentException("Customer Phone must be positive.");
+    }
+    if (customer.getAddress() == null) {
+        throw new IllegalArgumentException("Customer Address is required.");
+    }
+
+    String sql = "UPDATE customers SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?";
+
+    try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, customer.getName());
+        stmt.setString(2, customer.getEmail());
+        stmt.setInt(3, customer.getPhone());
+        stmt.setString(4, customer.getAddress());
+        stmt.setLong(5, customer.getId());
+
+        int rowsAffected = stmt.executeUpdate();
+
+        if (rowsAffected == 0) {
+            throw new IllegalArgumentException("No customer found with id " + customer.getId());
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to update customer", e);
+    }
+}
     }
 
     @Override
