@@ -53,7 +53,7 @@ public class ProductService {
                 product.getStockQuantity() >= 0 ? product.getStockQuantity() : existingProduct.getStockQuantity()
         );
 
-        return productRepository.save(product);
+        return productRepository.save(updatedProduct);
     }
 
     public List<Product> listProducts() {
