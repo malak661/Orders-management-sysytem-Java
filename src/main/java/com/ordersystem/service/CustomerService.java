@@ -39,10 +39,34 @@ public class CustomerService {
         return customerRepository.update(customer);
     }
 
-    public List<Customer> searchCustomers(String keyword) {
-        // TODO
-        return null;
+public List<Customer> searchCustomers(String keyword) {
+
+    List<Customer> customersList = customerRepository.findAll();
+
+    if (customersList.isEmpty()) {
+        throw new IllegalArgumentException("There are no customers found");
     }
+
+    if (keyword == null ) {
+        throw new IllegalArgumentException("Search keyword must not be empty");
+    }
+
+    List<Customer> matchedCustomers = new ArrayList<>();
+
+    for (Customer customer : customersList) {
+        String name = customer.getName();
+        String email = customer.getEmail();
+
+        boolean nameMatches = name != null && name.toLowerCase().contains(keyword.toLowerCase());
+        boolean emailMatches = email != null && email.toLowerCase().contains(keyword.toLowerCase());
+
+        if (nameMatches || emailMatches) {
+            matchedCustomers.add(customer);
+        }
+    }
+
+    return matchedCustomers;
+}
 
     public List<Customer> listCustomers() {
         return customerRepository.findAll();
