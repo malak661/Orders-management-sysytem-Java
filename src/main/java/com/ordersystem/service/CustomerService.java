@@ -77,6 +77,6 @@ public List<Customer> searchCustomers(String keyword) {
         {
             throw new IllegalArgumentException("Customer with id " + id + " not found");
         }
-        customerRepository.delete(customer);
+        customerRepository.delete(customer.getId());
     }
 }

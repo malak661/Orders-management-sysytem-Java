@@ -14,7 +14,6 @@ import java.util.Optional;
  */
 public class CustomerRepositoryJdbc implements CustomerRepository {
 
-    @Override
 @Override
 public Customer save(Customer customer) {
 
@@ -24,8 +23,8 @@ public Customer save(Customer customer) {
     if (customer.getEmail() == null) {
         throw new IllegalArgumentException("Customer Email is required.");
     }
-    if (customer.getPhone() == null) {
-        throw new IllegalArgumentException("Customer Number is required.");
+    if (customer.getPhone() > 0) {
+        throw new IllegalArgumentException("Customer Number must be in positive.");
     }
     if (customer.getAddress() == null) {
         throw new IllegalArgumentException("Customer Address is required.");
@@ -38,7 +37,7 @@ public Customer save(Customer customer) {
 
         stmt.setString(1, customer.getName());
         stmt.setString(2, customer.getEmail());
-        stmt.setString(3, customer.getPhone());
+        stmt.setInt(3, customer.getPhone());
         stmt.setString(4, customer.getAddress());
 
         stmt.executeUpdate();
@@ -56,7 +55,7 @@ public Customer save(Customer customer) {
     }
 }
 
-    @Override
+
 @Override
 public Optional<Customer> findById(long id) {
 
@@ -153,10 +152,9 @@ public Optional<Customer> findById(long id) {
     return customers;
     }
 
-    @Override
-    public void update(Customer customer) {
+
        @Override
-public void update(Customer customer) {
+public Customer update(Customer customer) {
 
     if (customer == null || customer.getId() <= 0) {
         throw new IllegalArgumentException("Valid customer with an ID is required to update.");
@@ -194,10 +192,11 @@ public void update(Customer customer) {
     } catch (SQLException e) {
         throw new RuntimeException("Failed to update customer", e);
     }
-}
+    return findById(customer.getId())
+                .orElseThrow(() -> new IllegalArgumentException("No customer found with id " + customer.getId()));
     }
+    
 
-    @Override
     @Override
 public void delete(long id) {
 
