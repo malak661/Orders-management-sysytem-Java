@@ -1,5 +1,6 @@
 package com.ordersystem.util;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,10 +14,11 @@ import java.sql.SQLException;
 public class DbConnection {
 
     private static final String DB_URL = "jdbc:sqlite:orders.db"; // TODO confirm path
+    private static final String SCHEMA_RESOURCE = "/schema.sql";
+    private static final Path SCHEMA_FILE_FALLBACK = Path.of("src", "main", "resources", "schema.sql");
 
     public static Connection getConnection() throws SQLException {
-        // TODO
-        return null;
+        return DriverManager.getConnection(DB_URL);
     }
 
     public static void initializeSchema() {
