@@ -103,7 +103,16 @@ public class ProductRepositoryJdbc implements ProductRepository {
 
     @Override
     public void update(Product product) {
-        // TODO
+       requireValidProduct(product);
+
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+            bindProductValues(statement, product, 1);
+            statement.setString(4, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update product with id: " + product.getId(), e);
+        }
     }
 
     @Override
