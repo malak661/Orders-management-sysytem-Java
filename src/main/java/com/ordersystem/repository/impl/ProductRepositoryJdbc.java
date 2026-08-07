@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -140,5 +141,12 @@ public class ProductRepositoryJdbc implements ProductRepository {
         statement.setString(startIndex + 1,
                 product.getPrice() == null ? null : product.getPrice().toPlainString());
         statement.setInt(startIndex + 2, product.getStockQuantity());
+    }
+    private List<Product> mapRows(ResultSet resultSet) throws SQLException {
+        List<Product> products = new ArrayList<>();
+        while (resultSet.next()) {
+            products.add(mapRow(resultSet));
+        }
+        return products;
     }
 }
