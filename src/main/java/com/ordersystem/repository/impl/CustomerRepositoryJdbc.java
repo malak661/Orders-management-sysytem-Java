@@ -138,7 +138,28 @@ public Optional<Customer> findById(long id) {
     }
 
     @Override
-    public void delete(long id) {
-        // TODO
+    @Override
+public void delete(long id) {
+
+    if (id <= 0) {
+        throw new IllegalArgumentException("Customer ID must be a positive number.");
     }
+
+    String sql = "DELETE FROM customers WHERE id = ?";
+
+    try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setLong(1, id);
+
+        int rowsAffected = stmt.executeUpdate();
+
+        if (rowsAffected == 0) {
+            throw new IllegalArgumentException("No customer found with id " + id);
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to delete customer", e);
+    }
+}
 }
