@@ -93,8 +93,37 @@ public Optional<Customer> findById(long id) {
 
     @Override
     public Optional<Customer> findByEmail(String email) {
-        // TODO
-        return Optional.empty();
+        if(email == null)
+        {
+          throw new IllegalArgumentException("Customer email is required.");   
+        }
+
+        String sql = "SELECT * FROM customers WHERE email = ?";
+
+         try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, email);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getLong("id"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setAddress(rs.getString("address"));
+
+                return Optional.of(customer);
+            } else {
+                return Optional.empty();
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to find customer", e);
+    }
+        
     }
 
     @Override
