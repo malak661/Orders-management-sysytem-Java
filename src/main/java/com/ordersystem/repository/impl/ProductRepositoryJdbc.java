@@ -4,6 +4,7 @@ import com.ordersystem.model.Product;
 import com.ordersystem.repository.ProductRepository;
 import com.ordersystem.util.DbConnection;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -148,5 +149,13 @@ public class ProductRepositoryJdbc implements ProductRepository {
             products.add(mapRow(resultSet));
         }
         return products;
+    }
+       private Product mapRow(ResultSet resultSet) throws SQLException {
+        String price = resultSet.getString("price");
+        return new Product(
+                resultSet.getString("id"),
+                resultSet.getString("name"),
+                price == null ? null : new BigDecimal(price),
+                resultSet.getInt("stock_quantity"));
     }
 }
