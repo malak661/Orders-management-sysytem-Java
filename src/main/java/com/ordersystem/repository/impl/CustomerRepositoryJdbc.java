@@ -57,10 +57,39 @@ public Customer save(Customer customer) {
 }
 
     @Override
-    public Optional<Customer> findById(long id) {
-        // TODO
-        return Optional.empty();
+@Override
+public Optional<Customer> findById(long id) {
+
+    if (id <= 0) {
+        throw new IllegalArgumentException("Customer ID must be Positive.");
     }
+
+    String sql = "SELECT * FROM customers WHERE id = ?";
+
+    try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setLong(1, id);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                Customer customer = new Customer();
+                customer.setId(rs.getLong("id"));
+                customer.setName(rs.getString("name"));
+                customer.setEmail(rs.getString("email"));
+                customer.setPhone(rs.getString("phone"));
+                customer.setAddress(rs.getString("address"));
+
+                return Optional.of(customer);
+            } else {
+                return Optional.empty();
+            }
+        }
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to find customer", e);
+    }
+}
 
     @Override
     public Optional<Customer> findByEmail(String email) {
