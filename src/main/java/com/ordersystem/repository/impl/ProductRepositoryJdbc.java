@@ -89,8 +89,16 @@ public class ProductRepositoryJdbc implements ProductRepository {
 
     @Override
     public List<Product> findLowStock(int threshold) {
-        // TODO
-        return null;
+        //
+       try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_LOW_STOCK_SQL)) {
+            statement.setInt(1, threshold);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return mapRows(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find products with stock <= " + threshold, e);
+        }
     }
 
     @Override
