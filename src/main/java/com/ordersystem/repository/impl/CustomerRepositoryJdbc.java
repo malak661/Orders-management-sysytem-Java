@@ -15,10 +15,46 @@ import java.util.Optional;
 public class CustomerRepositoryJdbc implements CustomerRepository {
 
     @Override
-    public Customer save(Customer customer) {
-        // TODO
-        return null;
+@Override
+public Customer save(Customer customer) {
+
+    if (customer.getName() == null) {
+        throw new IllegalArgumentException("Customer Name is required.");
     }
+    if (customer.getEmail() == null) {
+        throw new IllegalArgumentException("Customer Email is required.");
+    }
+    if (customer.getPhone() == null) {
+        throw new IllegalArgumentException("Customer Number is required.");
+    }
+    if (customer.getAddress() == null) {
+        throw new IllegalArgumentException("Customer Address is required.");
+    }
+
+    String sql = "INSERT INTO customers (name, email, phone, address) VALUES (?, ?, ?, ?)";
+
+    try (Connection conn = DbConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+        stmt.setString(1, customer.getName());
+        stmt.setString(2, customer.getEmail());
+        stmt.setString(3, customer.getPhone());
+        stmt.setString(4, customer.getAddress());
+
+        stmt.executeUpdate();
+
+        try (ResultSet keys = stmt.getGeneratedKeys()) {
+            if (keys.next()) {
+                customer.setId(keys.getLong(1));
+            }
+        }
+
+        return customer;
+
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to save customer", e);
+    }
+}
 
     @Override
     public Optional<Customer> findById(long id) {
