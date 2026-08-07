@@ -78,8 +78,13 @@ public class ProductRepositoryJdbc implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        // TODO
-        return null;
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL);
+             ResultSet resultSet = statement.executeQuery()) {
+            return mapRows(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to list all products", e);
+        }
     }
 
     @Override
