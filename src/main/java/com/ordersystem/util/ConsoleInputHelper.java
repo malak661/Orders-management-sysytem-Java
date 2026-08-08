@@ -42,6 +42,17 @@ public class ConsoleInputHelper {
         }
     }
 
+    public long readLong(String prompt) {
+        while (true) {
+            String raw = readString(prompt);
+            try {
+                return Long.parseLong(raw);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a valid long integer.");
+            }
+        }
+    }
+
     public boolean readYesNo(String prompt) {
         while (true) {
             String raw = readString(prompt + " (y/n): ");

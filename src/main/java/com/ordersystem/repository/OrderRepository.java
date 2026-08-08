@@ -19,7 +19,7 @@ public interface OrderRepository {
 
     List<Order> findAll();
 
-    List<Order> findByCustomerId(String customerId);
+    List<Order> findByCustomerId(long customerId);
 
     List<Order> findUnpaid();
 

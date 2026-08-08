@@ -22,8 +22,8 @@ public class ReportService {
         this.productRepository = productRepository;
     }
 
-    public List<Order> getCustomerOrderHistory(String customerId) {
-        if (customerId == null || customerId.isBlank()) {
+    public List<Order> getCustomerOrderHistory(long customerId) {
+        if (customerId <= 0) {
             return Collections.emptyList();
         }
         return orderRepository.findByCustomerId(customerId);
