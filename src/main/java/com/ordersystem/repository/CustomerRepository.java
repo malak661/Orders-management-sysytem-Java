@@ -13,7 +13,7 @@ public interface CustomerRepository {
 
     Customer save(Customer customer);
 
-    Optional<Customer> findById(String id);
+    Optional<Customer> findById(long id);
 
     Optional<Customer> findByEmail(String email);
 
@@ -21,5 +21,5 @@ public interface CustomerRepository {
 
     void update(Customer customer);
 
-    void delete(String id);
+    void delete(long id);
 }
