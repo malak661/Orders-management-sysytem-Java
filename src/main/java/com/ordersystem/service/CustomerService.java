@@ -29,16 +29,17 @@ public Customer createCustomer(Customer customer) {
     }
 }
     public Customer updateCustomer(Customer customer) {
-        if (customer == null || customer.getId() <= 0) {
+        if(customer == null || customer.getId() <= 0)
+        {
             throw new IllegalArgumentException("Customer id must be provided for update");
         }
         if (customerRepository.findById(customer.getId()).isEmpty()) {
-            throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
+     
+       throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
         }
         customerRepository.update(customer);
         return customer;
     }
-
 public List<Customer> searchCustomers(String keyword) {
 
     List<Customer> customersList = customerRepository.findAll();
@@ -73,10 +74,10 @@ public List<Customer> searchCustomers(String keyword) {
     }
 
     public void deleteCustomer(long id) {
-        Optional<Customer> customer = customerRepository.findById(id);
-        if (customer.isEmpty()) {
+        if(customerRepository.findById(id).isEmpty())
+        {
             throw new IllegalArgumentException("Customer with id " + id + " not found");
         }
-        customerRepository.delete(customer.get().getId());
+        customerRepository.delete(id);
     }
 }

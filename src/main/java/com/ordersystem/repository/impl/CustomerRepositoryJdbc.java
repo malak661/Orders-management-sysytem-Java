@@ -160,7 +160,7 @@ public Optional<Customer> findById(long id) {
 
 
        @Override
-    public void update(Customer customer) {
+public void update(Customer customer) {
 
         if (customer == null || customer.getId() <= 0) {
             throw new IllegalArgumentException("Valid customer with an ID is required to update.");
@@ -195,9 +195,9 @@ public Optional<Customer> findById(long id) {
                 throw new IllegalArgumentException("No customer found with id " + customer.getId());
             }
 
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to update customer", e);
-        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Failed to update customer", e);
+    }
     }
     
 
