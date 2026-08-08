@@ -4,6 +4,12 @@ import com.ordersystem.model.Customer;
 import com.ordersystem.repository.CustomerRepository;
 import com.ordersystem.util.DbConnection;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,7 +160,7 @@ public Optional<Customer> findById(long id) {
 
 
        @Override
-public Customer update(Customer customer) {
+public void update(Customer customer) {
 
     if (customer == null || customer.getId() <= 0) {
         throw new IllegalArgumentException("Valid customer with an ID is required to update.");
@@ -192,8 +198,6 @@ public Customer update(Customer customer) {
     } catch (SQLException e) {
         throw new RuntimeException("Failed to update customer", e);
     }
-    return findById(customer.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No customer found with id " + customer.getId()));
     }
     
 

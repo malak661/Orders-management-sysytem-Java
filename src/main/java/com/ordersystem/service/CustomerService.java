@@ -3,6 +3,7 @@ package com.ordersystem.service;
 import com.ordersystem.model.Customer;
 import com.ordersystem.repository.CustomerRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
@@ -27,7 +28,7 @@ public Customer createCustomer(Customer customer) {
     }
 }
     public Customer updateCustomer(Customer customer) {
-        if(customer == null || customer.getId() == null)
+        if(customer == null || customer.getId() <= 0)
         {
             throw new IllegalArgumentException("Customer id must be provided for update");
         }
@@ -35,7 +36,8 @@ public Customer createCustomer(Customer customer) {
         {
             throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
         }
-        return customerRepository.update(customer);
+        customerRepository.update(customer);
+        return customer;
     }
 
 public List<Customer> searchCustomers(String keyword) {
@@ -72,11 +74,10 @@ public List<Customer> searchCustomers(String keyword) {
     }
 
     public void deleteCustomer(long id) {
-        Customer customer = customerRepository.findById(id);
-        if(customer == null)
+        if(customerRepository.findById(id).isEmpty())
         {
             throw new IllegalArgumentException("Customer with id " + id + " not found");
         }
-        customerRepository.delete(customer.getId());
+        customerRepository.delete(id);
     }
 }
