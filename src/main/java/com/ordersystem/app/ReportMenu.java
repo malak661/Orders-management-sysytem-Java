@@ -46,7 +46,7 @@ public class ReportMenu {
     }
 
     private void showCustomerOrderHistory() {
-        String customerId = inputHelper.readString("Enter customer ID: ");
+        long customerId = inputHelper.readLong("Enter customer ID: ");
         List<Order> orders = reportService.getCustomerOrderHistory(customerId);
 
         if (orders == null || orders.isEmpty()) {

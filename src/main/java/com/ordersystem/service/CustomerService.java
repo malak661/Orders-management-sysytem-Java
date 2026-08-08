@@ -5,6 +5,7 @@ import com.ordersystem.repository.CustomerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CustomerService {
 
@@ -32,14 +33,13 @@ public Customer createCustomer(Customer customer) {
         {
             throw new IllegalArgumentException("Customer id must be provided for update");
         }
-        if(customerRepository.findById(customer.getId()).isEmpty())
-        {
-            throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
+        if (customerRepository.findById(customer.getId()).isEmpty()) {
+     
+       throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
         }
         customerRepository.update(customer);
         return customer;
     }
-
 public List<Customer> searchCustomers(String keyword) {
 
     List<Customer> customersList = customerRepository.findAll();
