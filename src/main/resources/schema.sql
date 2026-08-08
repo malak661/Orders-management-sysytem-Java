@@ -1,9 +1,9 @@
 PRAGMA foreign_keys = ON;
 CREATE TABLE IF NOT EXISTS customers (
-    id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    phone TEXT,
+    phone INTEGER,
     address TEXT
 );
 
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
-    customer_id TEXT NOT NULL,
+    customer_id INTEGER NOT NULL,
     status TEXT NOT NULL,
     discount TEXT,
     tax TEXT,
