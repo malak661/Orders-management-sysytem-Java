@@ -19,7 +19,7 @@ public interface CustomerRepository {
 
     List<Customer> findAll();
 
-    void update(Customer customer);
+    Customer update(Customer customer);
 
     void delete(long id);
 }

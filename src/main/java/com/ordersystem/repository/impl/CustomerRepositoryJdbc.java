@@ -1,11 +1,14 @@
 package com.ordersystem.repository.impl;
 
+import com.ordersystem.exception.CustomerNotFoundException;
 import com.ordersystem.model.Customer;
 import com.ordersystem.repository.CustomerRepository;
 import com.ordersystem.util.DbConnection;
 
 import java.util.List;
 import java.util.Optional;
+import java.sql.*
+import java.util.ArrayList
 
 /**
  * SQLite/JDBC implementation of CustomerRepository.
@@ -23,7 +26,7 @@ public Customer save(Customer customer) {
     if (customer.getEmail() == null) {
         throw new IllegalArgumentException("Customer Email is required.");
     }
-    if (customer.getPhone() > 0) {
+    if (customer.getPhone() < 0) {
         throw new IllegalArgumentException("Customer Number must be in positive.");
     }
     if (customer.getAddress() == null) {
@@ -186,14 +189,14 @@ public Customer update(Customer customer) {
         int rowsAffected = stmt.executeUpdate();
 
         if (rowsAffected == 0) {
-            throw new IllegalArgumentException("No customer found with id " + customer.getId());
+            throw new CustomerNotFoundException(customer.getId());
         }
 
     } catch (SQLException e) {
         throw new RuntimeException("Failed to update customer", e);
     }
     return findById(customer.getId())
-                .orElseThrow(() -> new IllegalArgumentException("No customer found with id " + customer.getId()));
+                .orElseThrow(() -> new CustomerNotFoundException(customer.getId()));
     }
     
 
@@ -214,7 +217,7 @@ public void delete(long id) {
         int rowsAffected = stmt.executeUpdate();
 
         if (rowsAffected == 0) {
-            throw new IllegalArgumentException("No customer found with id " + id);
+            throw new CustomerNotFoundException(id);
         }
 
     } catch (SQLException e) {
