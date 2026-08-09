@@ -163,7 +163,7 @@ public Optional<Customer> findById(long id) {
 
 
        @Override
-public void update(Customer customer) {
+public Customer update(Customer customer) {
 
         if (customer == null || customer.getId() <= 0) {
             throw new IllegalArgumentException("Valid customer with an ID is required to update.");
