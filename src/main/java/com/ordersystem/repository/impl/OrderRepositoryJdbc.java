@@ -34,7 +34,7 @@ public class OrderRepositoryJdbc implements OrderRepository {
     }
 
     @Override
-    public List<Order> findByCustomerId(String customerId) {
+    public List<Order> findByCustomerId(long customerId) {
         // TODO
         return null;
     }

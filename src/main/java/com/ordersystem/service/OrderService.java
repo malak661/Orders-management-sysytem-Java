@@ -31,7 +31,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order createOrder(String customerId, List<OrderItem> items) {
+    public Order createOrder(long customerId, List<OrderItem> items) {
         // TODO: validate customer, validate items not empty, validate stock for each item
         return null;
     }
@@ -66,7 +66,7 @@ public class OrderService {
         return null;
     }
 
-    public List<Order> getOrdersByCustomer(String customerId) {
+    public List<Order> getOrdersByCustomer(long customerId) {
         // TODO
         return null;
     }

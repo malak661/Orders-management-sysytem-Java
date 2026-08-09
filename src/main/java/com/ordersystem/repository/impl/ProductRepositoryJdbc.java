@@ -4,6 +4,12 @@ import com.ordersystem.model.Product;
 import com.ordersystem.repository.ProductRepository;
 import com.ordersystem.util.DbConnection;
 
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,38 +19,143 @@ import java.util.Optional;
  * TODO: create the "products" table via schema.sql (see resources/)
  */
 public class ProductRepositoryJdbc implements ProductRepository {
+    private static final String SELECT_COLUMNS = "id, name, price, stock_quantity";
+
+    private static final String INSERT_SQL =
+            "INSERT INTO products (id, name, price, stock_quantity) VALUES (?, ?, ?, ?)";
+
+    private static final String UPDATE_SQL =
+            "UPDATE products SET name = ?, price = ?, stock_quantity = ? WHERE id = ?";
+
+    private static final String FIND_BY_ID_SQL =
+            "SELECT " + SELECT_COLUMNS + " FROM products WHERE id = ?";
+
+    private static final String FIND_ALL_SQL =
+            "SELECT " + SELECT_COLUMNS + " FROM products ORDER BY name";
+
+    private static final String FIND_LOW_STOCK_SQL =
+            "SELECT " + SELECT_COLUMNS + " FROM products WHERE stock_quantity <= ? ORDER BY stock_quantity ASC";
+
+    private static final String DELETE_SQL =
+            "DELETE FROM products WHERE id = ?";
 
     @Override
     public Product save(Product product) {
-        // TODO
-        return null;
+      requireValidProduct(product);
+
+        try (Connection connection = DbConnection.getConnection()) {
+            try (PreparedStatement updateStatement = connection.prepareStatement(UPDATE_SQL)) {
+                bindProductValues(updateStatement, product, 1);
+                updateStatement.setString(4, product.getId());
+                if (updateStatement.executeUpdate() > 0) {
+                    return product;
+                }
+            }
+            try (PreparedStatement insertStatement = connection.prepareStatement(INSERT_SQL)) {
+                insertStatement.setString(1, product.getId());
+                bindProductValues(insertStatement, product, 2);
+                insertStatement.executeUpdate();
+            }
+            return product;
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save product with id: " + product.getId(), e);
+        }
     }
 
     @Override
     public Optional<Product> findById(String id) {
-        // TODO
-        return Optional.empty();
+        if (id == null || id.isEmpty()) {
+            return Optional.empty();
+        }
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_SQL)) {
+            statement.setString(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(mapRow(resultSet)) : Optional.empty();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find product with id: " + id, e);
+        }
     }
 
     @Override
     public List<Product> findAll() {
-        // TODO
-        return null;
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ALL_SQL);
+             ResultSet resultSet = statement.executeQuery()) {
+            return mapRows(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to list all products", e);
+        }
     }
 
     @Override
     public List<Product> findLowStock(int threshold) {
-        // TODO
-        return null;
+        //
+       try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_LOW_STOCK_SQL)) {
+            statement.setInt(1, threshold);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return mapRows(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find products with stock <= " + threshold, e);
+        }
     }
 
     @Override
     public void update(Product product) {
-        // TODO
+       requireValidProduct(product);
+
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+            bindProductValues(statement, product, 1);
+            statement.setString(4, product.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update product with id: " + product.getId(), e);
+        }
     }
 
     @Override
     public void delete(String id) {
-        // TODO
+         if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("Product id must not be null or empty");
+        }
+        try (Connection connection = DbConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+            statement.setString(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete product with id: " + id, e);}
+        }
+        private void requireValidProduct(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product must not be null");
+        }
+        if (product.getId() == null || product.getId().isEmpty()) {
+            throw new IllegalArgumentException("Product id must not be null or empty");
+        }
+    }
+    private void bindProductValues(PreparedStatement statement, Product product, int startIndex) throws SQLException {
+        statement.setString(startIndex, product.getName());
+        statement.setString(startIndex + 1,
+                product.getPrice() == null ? null : product.getPrice().toPlainString());
+        statement.setInt(startIndex + 2, product.getStockQuantity());
+    }
+    private List<Product> mapRows(ResultSet resultSet) throws SQLException {
+        List<Product> products = new ArrayList<>();
+        while (resultSet.next()) {
+            products.add(mapRow(resultSet));
+        }
+        return products;
+    }
+       private Product mapRow(ResultSet resultSet) throws SQLException {
+        String price = resultSet.getString("price");
+        return new Product(
+                resultSet.getString("id"),
+                resultSet.getString("name"),
+                price == null ? null : new BigDecimal(price),
+                resultSet.getInt("stock_quantity"));
     }
 }

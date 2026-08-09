@@ -5,10 +5,6 @@ import java.util.Scanner;
 
 /**
  * Utility class for reading and validating console input.
- * TODO: implement readString(prompt)
- * TODO: implement readInt(prompt) -> with retry on invalid input
- * TODO: implement readBigDecimal(prompt) -> with retry on invalid input
- * TODO: implement readYesNo(prompt)
  */
 public class ConsoleInputHelper {
 
@@ -19,22 +15,54 @@ public class ConsoleInputHelper {
     }
 
     public String readString(String prompt) {
-        // TODO
-        return null;
+        System.out.print(prompt);
+        String value = scanner.nextLine();
+        return value == null ? "" : value.trim();
     }
 
     public int readInt(String prompt) {
-        // TODO
-        return 0;
+        while (true) {
+            String raw = readString(prompt);
+            try {
+                return Integer.parseInt(raw);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a valid integer.");
+            }
+        }
     }
 
     public BigDecimal readBigDecimal(String prompt) {
-        // TODO
-        return null;
+        while (true) {
+            String raw = readString(prompt);
+            try {
+                return new BigDecimal(raw);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid decimal value. Please enter a valid number.");
+            }
+        }
+    }
+
+    public long readLong(String prompt) {
+        while (true) {
+            String raw = readString(prompt);
+            try {
+                return Long.parseLong(raw);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Please enter a valid long integer.");
+            }
+        }
     }
 
     public boolean readYesNo(String prompt) {
-        // TODO
-        return false;
+        while (true) {
+            String raw = readString(prompt + " (y/n): ");
+            if (raw.equalsIgnoreCase("y") || raw.equalsIgnoreCase("yes")) {
+                return true;
+            }
+            if (raw.equalsIgnoreCase("n") || raw.equalsIgnoreCase("no")) {
+                return false;
+            }
+            System.out.println("Please answer 'y' or 'n'.");
+        }
     }
 }
