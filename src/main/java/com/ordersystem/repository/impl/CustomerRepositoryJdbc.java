@@ -1,5 +1,6 @@
 package com.ordersystem.repository.impl;
 
+import com.ordersystem.exception.CustomerNotFoundException;
 import com.ordersystem.model.Customer;
 import com.ordersystem.repository.CustomerRepository;
 import com.ordersystem.util.DbConnection;
@@ -12,6 +13,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.sql.*
+import java.util.ArrayList
 
 /**
  * SQLite/JDBC implementation of CustomerRepository.
@@ -191,13 +194,15 @@ public void update(Customer customer) {
 
             int rowsAffected = stmt.executeUpdate();
 
-            if (rowsAffected == 0) {
-                throw new IllegalArgumentException("No customer found with id " + customer.getId());
-            }
+        if (rowsAffected == 0) {
+            throw new CustomerNotFoundException(customer.getId());
+        }
 
     } catch (SQLException e) {
         throw new RuntimeException("Failed to update customer", e);
     }
+    return findById(customer.getId())
+                .orElseThrow(() -> new CustomerNotFoundException(customer.getId()));
     }
     
 
@@ -218,7 +223,7 @@ public void delete(long id) {
         int rowsAffected = stmt.executeUpdate();
 
         if (rowsAffected == 0) {
-            throw new IllegalArgumentException("No customer found with id " + id);
+            throw new CustomerNotFoundException(id);
         }
 
     } catch (SQLException e) {
