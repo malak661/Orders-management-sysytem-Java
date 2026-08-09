@@ -1,5 +1,6 @@
 package com.ordersystem.service;
-
+import com.ordersystem.exception.CustomerNotFoundException;
+import com.ordersystem.exception.DuplicateEmailException;
 import com.ordersystem.model.Customer;
 import com.ordersystem.repository.CustomerRepository;
 
@@ -22,8 +23,8 @@ public Customer createCustomer(Customer customer) {
 
     String email = customer.getEmail();
 
-    if (customerRepository.findByEmail(email).isPresent()) {
-        throw new IllegalArgumentException("Email is already used");
+    if (email != null && customerRepository.findByEmail(email).isPresent()) {
+        throw new DuplicateEmailException(email) ;
     } else {
         return customerRepository.save(customer);
     }
@@ -35,7 +36,7 @@ public Customer createCustomer(Customer customer) {
         }
         if (customerRepository.findById(customer.getId()).isEmpty()) {
      
-       throw new IllegalArgumentException("Customer id " + customer.getId() + " not found");
+       throw new CustomerNotFoundException(customer.getId());
         }
         customerRepository.update(customer);
         return customer;
@@ -76,7 +77,7 @@ public List<Customer> searchCustomers(String keyword) {
     public void deleteCustomer(long id) {
         if(customerRepository.findById(id).isEmpty())
         {
-            throw new IllegalArgumentException("Customer with id " + id + " not found");
+            throw new CustomerNotFoundException(id);
         }
         customerRepository.delete(id);
     }
