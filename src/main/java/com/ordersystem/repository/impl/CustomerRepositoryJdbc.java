@@ -13,8 +13,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.sql.*
-import java.util.ArrayList
 
 /**
  * SQLite/JDBC implementation of CustomerRepository.
