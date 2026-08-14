@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Order {
 
     private String id;
-    private long customerId;
+    private String customerId;
     private List<OrderItem> items = new ArrayList<>();
     private OrderStatus status;
     private BigDecimal discount;
@@ -22,7 +22,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String id, long customerId, List<OrderItem> items, OrderStatus status,
+    public Order(String id, String customerId, List<OrderItem> items, OrderStatus status,
                  BigDecimal discount, BigDecimal tax, BigDecimal subtotal, BigDecimal total,
                  LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
@@ -40,8 +40,8 @@ public class Order {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public long getCustomerId() { return customerId; }
-    public void setCustomerId(long customerId) { this.customerId = customerId; }
+    public String getCustomerId() { return customerId; }
+    public void setCustomerId(String customerId) { this.customerId = customerId; }
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }
